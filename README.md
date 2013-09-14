@@ -9,8 +9,8 @@ Load all data from USA Cycling's `wp_all_clubs2.csv1` and `wp_p_uscf_tn.csv` pro
 ### Redis
 Redis is a high-performance key-value store. Import to Redis for very fast web application lookups (i.e., text-field autocomplete) or statistical analysis.
 
-### MySQL/Postgres/<otherRDBMS>
-Import to a traditional relational database if you'd like. Models are fully foreign-keyed (caveat: riders with a club that doesn't exist in the clubs list being used will have their clubs unset.
+### MySQL/Postgres/[otherRDBMS]
+Import to a traditional relational database if you'd like. Models are fully foreign-keyed (caveat: riders with a club that doesn't exist in the clubs list being used will have their clubs unset).
 
 ## Bugs
 Something's probably broken somewhere. Surprise? Use the GitHub issue tracker to notify me of bugs.
