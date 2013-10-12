@@ -6,7 +6,7 @@ Foreign key-ish values (club/team IDs) are converted to
 
 
 def unicode_conv(s):
-    return str(s).decode('utf-8')
+    return str(s).decode('utf-8', 'replace')
 
 
 def convert_int_neg_if_invalid(s):
