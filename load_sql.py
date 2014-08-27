@@ -83,9 +83,9 @@ session.add_all(rdrs)
 session.commit()
 print(">> Riders loaded.")
 
-rider_ct = session.query(Rider).all().count()
-team_ct = session.query(Team).all().count()
-club_ct = session.query(Club).all().count()
+rider_ct = len(list(session.query(Rider).all()))
+team_ct = len(list(session.query(Team).all()))
+club_ct = len(list(session.query(Club).all()))
 
 print((">> Loaded %d clubs, %d teams, and %d members from CSV." % (club_ct, team_ct, rider_ct)))
 
