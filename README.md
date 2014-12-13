@@ -1,4 +1,4 @@
-NOTICE: USA Cycling has updated their file formats for the membership database substantially. Work has begun on a new version of this toolkit. I have not tested the current version against the new file formats and therefore the current version should be considered unsupported.
+NOTICE: USA Cycling has updated their file formats for the membership database substantially. Work has begun on a new version of this toolkit (branch: `v3`). I have not tested the current version against the new file formats and therefore the current version should be considered unsupported.
 
 # USA Cycling Database Tools
 Tools for working with the USA Cycling member "database" (CSV files *cough cough*) in Python. In other words, some help for the programming-inclined USA Cycling promoter.
