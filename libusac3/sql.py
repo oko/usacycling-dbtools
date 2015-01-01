@@ -7,7 +7,7 @@ class Club(Base):
     __tablename__ = "usac_club"
 
     club_id = Column(Integer, primary_key=True)
-    name = Column(String(255))
+    club_name = Column(String(255))
 
     contact_name = Column(String(255))
     address_1 = Column(String(255))
@@ -19,19 +19,19 @@ class Club(Base):
     division = Column(Integer)
     ncca_conf = Column(String(5))
 
-    def __init__(self, data):
-        self.club_id = data[0]
-        self.name = data[1]
+    def __init__(self, **kwargs):
+        self.club_id = kwargs["club_id"]
+        self.club_name = kwargs["club_name"]
 
-        self.contact_name = data[4]
-        self.address_1 = data[5]
-        self.address_2 = data[6]
-        self.city = data[7]
-        self.state = data[8]
-        self.zipcode = data[9]
-        self.phone_number = data[10]
-        self.division = data[11]
-        self.ncca_conf = data[12]
+        self.contact_name = kwargs["contact_name"]
+        self.address_1 = kwargs["address_1"]
+        self.address_2 = kwargs["address_2"]
+        self.city = kwargs["city"]
+        self.state = kwargs["state"]
+        self.zipcode = kwargs["zipcode"]
+        self.phone_number = kwargs["phone_number"]
+        self.division = kwargs["division"]
+        self.ncca_conf = kwargs["ncca_conf"]
 
     def __repr__(self):
         return "<Club #%d: %s>" % (self.club_id, self.name)
@@ -41,15 +41,15 @@ class Team(Base):
     __tablename__ = "usac_team"
 
     team_id = Column(Integer, primary_key=True)
-    name = Column(String(255))
+    team_name = Column(String(255))
 
     club_id = Column(Integer, ForeignKey(Club.__tablename__+".club_id"))
     club = relationship("Club", backref="teams")
 
-    def __init__(self, data):
-        self.team_id = data[2]
-        self.name = data[3]
-        self.club_id = data[0]
+    def __init__(self, **kwargs):
+        self.team_id = kwargs["team_id"]
+        self.team_name = kwargs["team_name"]
+        self.club_id = kwargs["club_id"]
 
     def __repr__(self):
         return "<Team #%d: %s (club #%d)>" % (self.team_id, self.name, self.club_id)
@@ -114,40 +114,40 @@ class Rider(Base):
     hs_club_id = Column(Integer)
     hs_team_id = Column(Integer)
 
-    def __init__(self, data):
-        self.suspension = data[0]     # Suspension Status
-        self.license = data[1]        # License Number
-        self.first_name = data[3]     # First Name
-        self.last_name = data[2]      # Last Name
-        self.city = data[4]           # City
-        self.state = data[5]          # State
-        self.zipcode = data[6]        # Zip Code
-        self.gender = data[7]         # Gender
-        self.racing_age = data[8]     # Racing Age
-        self.expire_date = data[9]    # License Expiration Date
-        self.intl_team = data[18]     # Intl Team
-        self.road_cat = data[20]      # Road Category
-        self.track_cat = data[21]     # Track Category
-        self.xc_cat = data[22]        # XC Category
-        self.dh_cat = data[23]        # DH Category
-        self.ot_cat = data[24]        # OT Category
-        self.mx_cat = data[25]        # MX Category
-        self.cx_cat = data[26]        # CX Category
-        self.birth_date = data[27]    # Birthday
-        self.citizenship = data[28]   # Citizenship
-        self.road_club_id = data[29]
-        self.road_team_id = data[30]  # RD Club/Team ID
-        self.track_club_id = data[31]
-        self.track_team_id = data[32] # Track Club/Team ID
-        self.mtn_club_id = data[33]
-        self.mtn_team_id = data[34]   # MTN Club/Team ID
-        self.cx_club_id = data[35]
-        self.cx_team_id = data[36]    # CX Club/Team ID
-        self.coll_club_id = data[37]  # Collegiate Club ID
-        self.uci_code = data[38]      # UCI Code
-        self.cx_rank = data[39]       # CX Rank
-        self.hs_club_id = data[42]
-        self.hs_team_id = data[43]    # HS Club/Team ID
+    def __init__(self, **kwargs):
+        self.suspension = kwargs["suspension"]  # Suspension Status
+        self.license = kwargs["license"]        # License Number
+        self.first_name = kwargs["first_name"]     # First Name
+        self.last_name = kwargs["last_name"]      # Last Name
+        self.city = kwargs["city"]           # City
+        self.state = kwargs["state"]          # State
+        self.zipcode = kwargs["zipcode"]        # Zip Code
+        self.gender = kwargs["gender"]         # Gender
+        self.racing_age = kwargs["racing_age"]     # Racing Age
+        self.expire_date = kwargs["expire_date"]    # License Expiration Date
+        self.intl_team = kwargs["intl_team"]     # Intl Team
+        self.road_cat = kwargs["road_cat"]      # Road Category
+        self.track_cat = kwargs["track_cat"]     # Track Category
+        self.xc_cat = kwargs["xc_cat"]        # XC Category
+        self.dh_cat = kwargs["dh_cat"]        # DH Category
+        self.ot_cat = kwargs["ot_cat"]        # OT Category
+        self.mx_cat = kwargs["mx_cat"]        # MX Category
+        self.cx_cat = kwargs["cx_cat"]        # CX Category
+        self.birth_date = kwargs["birth_date"]    # Birthday
+        self.citizenship = kwargs["citizenship"]   # Citizenship
+        self.road_club_id = kwargs["road_club_id"]
+        self.road_team_id = kwargs["road_team_id"]  # RD Club/Team ID
+        self.track_club_id = kwargs["track_club_id"]
+        self.track_team_id = kwargs["track_team_id"] # Track Club/Team ID
+        self.mtn_club_id = kwargs["mtn_club_id"]
+        self.mtn_team_id = kwargs["mtn_team_id"]   # MTN Club/Team ID
+        self.cx_club_id = kwargs["cx_club_id"]
+        self.cx_team_id = kwargs["cx_team_id"]    # CX Club/Team ID
+        self.coll_club_id = kwargs["coll_club_id"]  # Collegiate Club ID
+        self.uci_code = kwargs["uci_code"]      # UCI Code
+        self.cx_rank = kwargs["cx_rank"]       # CX Rank
+        self.hs_club_id = kwargs["hs_club_id"]
+        self.hs_team_id = kwargs["hs_team_id"]    # HS Club/Team ID
 
     def __repr__(self):
         return "<Rider #%d '%s %s'>" % (self.license, self.first_name, self.last_name)

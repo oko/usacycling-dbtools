@@ -172,57 +172,60 @@ def parse_ncca_division(val):
 
 
 RIDER_TRANSFORMS = (
-    parse_suspension,  # Suspension Status
-    parse_required_int,  # License Number
-    parse_name,  # First Name
-    parse_name,  # Last Name
-    parse_name,  # City
-    parse_state,  # State
-    parse_zip,  # Zip Code
-    parse_gender,  # Gender
-    parse_required_int,  # Racing Age
-    parse_date,  # License Expiration Date
-    parse_noop, parse_noop,  # Road Club/Team
-    parse_noop, parse_noop,  # Track Club/Team
-    parse_noop, parse_noop,  # MTN Club/Team
-    parse_noop, parse_noop,  # CX Club/Team
-    str,  # Intl Team
-    parse_noop,  # Collegiate Club
-    parse_category,  # Road Category
-    parse_category,  # Track Category
-    parse_category,  # XC Category
-    parse_category,  # DH Category
-    parse_category,  # OT Category
-    parse_category,  # MX Category
-    parse_category,  # CX Category
-    parse_date,  # Birthday
-    parse_citizen,  # Citizenship
-    parse_optional_int, parse_optional_int,  # RD Club/Team ID
-    parse_optional_int, parse_optional_int,  # Track Club/Team ID
-    parse_optional_int, parse_optional_int,  # MTN Club/Team ID
-    parse_optional_int, parse_optional_int,  # CX Club/Team ID
-    parse_optional_int,  # Collegiate Club ID
-    str,  # UCI Code
-    float,  # CX Rank
-    parse_noop, parse_noop,  # HS Club/Team Name
-    parse_optional_int, parse_optional_int,  # HS Club/Team ID
+    ("suspension", parse_suspension),  # Suspension Status
+    ("license", parse_required_int),  # License Number
+    ("first_name", parse_name),  # First Name
+    ("last_name", parse_name),  # Last Name
+    ("city", parse_name),  # City
+    ("state", parse_state),  # State
+    ("zipcode", parse_zip),  # Zip Code
+    ("gender", parse_gender),  # Gender
+    ("racing_age", parse_required_int),  # Racing Age
+    ("expire_date", parse_date),  # License Expiration Date
+    (None, parse_noop), (None, parse_noop),  # Road Club/Team
+    (None, parse_noop), (None, parse_noop),  # Track Club/Team
+    (None, parse_noop), (None, parse_noop),  # MTN Club/Team
+    (None, parse_noop), (None, parse_noop),  # CX Club/Team
+    ("intl_team", str),  # Intl Team
+    (None, parse_noop),  # Collegiate Club
+    ("road_cat", parse_category),  # Road Category
+    ("track_cat", parse_category),  # Track Category
+    ("xc_cat", parse_category),  # XC Category
+    ("dh_cat", parse_category),  # DH Category
+    ("ot_cat", parse_category),  # OT Category
+    ("mx_cat", parse_category),  # MX Category
+    ("cx_cat", parse_category),  # CX Category
+    ("birth_date", parse_date),  # Birthday
+    ("citizenship", parse_citizen),  # Citizenship
+    ("road_club_id", parse_optional_int), ("road_team_id", parse_optional_int),  # RD Club/Team ID
+    ("track_club_id", parse_optional_int), ("track_team_id", parse_optional_int),  # Track Club/Team ID
+    ("mtn_club_id", parse_optional_int), ("mtn_team_id", parse_optional_int),  # MTN Club/Team ID
+    ("cx_club_id", parse_optional_int), ("cx_team_id", parse_optional_int),  # CX Club/Team ID
+    ("coll_club_id", parse_optional_int),  # Collegiate Club ID
+    ("uci_code", str),  # UCI Code
+    ("cx_rank", float),  # CX Rank
+    (None, parse_noop), (None, parse_noop),  # HS Club/Team Name
+    ("hs_club_id", parse_optional_int), ("hs_team_id", parse_optional_int),  # HS Club/Team ID
 )
 
 CLUB_TEAM_TRANSFORMS = (
-    parse_required_int,
-    str,
-    parse_optional_int,
-    str,
-    parse_name,
-    parse_name,
-    parse_name,
-    parse_name,
-    parse_state,
-    parse_zip,
-    str,
-    parse_ncca_division,
-    str,
+    ("club_id", parse_required_int),
+    ("club_name", str),
+    ("team_id", parse_optional_int),
+    ("team_name", str),
+    ("contact_name", parse_name),
+    ("address_1", parse_name),
+    ("address_2", parse_name),
+    ("city", parse_name),
+    ("state", parse_state),
+    ("zipcode", parse_zip),
+    ("phone_number", str),
+    ("division", parse_ncca_division),
+    ("ncca_conf", str),
 )
+
+
+from collections import OrderedDict
 
 
 def process_row(transforms, row):
@@ -233,10 +236,11 @@ def process_row(transforms, row):
     :param row: a list of fields representing a row
     :return: a mutated list containing transformed values
     """
+    row_dict = {}
     for i in range(len(transforms)):
-        if transforms[i] != str:
-            row[i] = transforms[i](row[i])
-    return row
+        if transforms[i][0] is not None:
+            row_dict[transforms[i][0]] = transforms[i][1](row[i])
+    return row_dict
 
 
 def load_csv(path, transforms):

@@ -26,7 +26,7 @@ Base.metadata.create_all(bind=engine)
 
 club_data = load_csv(args.clubsfile, CLUB_TEAM_TRANSFORMS)
 
-clubs_duped = map(Club, club_data)
+clubs_duped = map(lambda c: Club(**c), club_data)
 clubs_id_set = set()
 clubs_deduped = []
 for c in clubs_duped:
@@ -38,7 +38,7 @@ for c in clubs_duped:
 
 session.add_all(clubs_deduped)
 session.commit()
-session.add_all(map(Team, filter(lambda c: c[2] is not None, club_data)))
+session.add_all(map(lambda t: Team(**t), filter(lambda t: t['team_id'] is not None, club_data)))
 session.commit()
 
 # Get all valid club & team IDs
@@ -48,33 +48,33 @@ valid_team_ids = tuple(map(lambda x: x.team_id, session.query(Team).all()))
 # Define rider data scrub function using
 # newly instantiated club/team IDs to check
 # for existence
-def clean_rider_data(data):
-    if data[29] not in valid_club_ids:
-        data[29] = None
-    if data[31] not in valid_club_ids:
-        data[31] = None
-    if data[33] not in valid_club_ids:
-        data[33] = None
-    if data[35] not in valid_club_ids:
-        data[35] = None
-    if data[37] not in valid_club_ids:
-        data[37] = None
-    if data[30] not in valid_team_ids:
-        data[30] = None
-    if data[32] not in valid_team_ids:
-        data[32] = None
-    if data[34] not in valid_team_ids:
-        data[34] = None
-    if data[36] not in valid_team_ids:
-        data[36] = None
-    return data
+def clean_rider_ids(rider):
+    if rider.road_club_id not in valid_club_ids:
+        rider.road_club_id = None
+    if rider.track_club_id not in valid_club_ids:
+        rider.track_club_id = None
+    if rider.mtn_club_id not in valid_club_ids:
+        rider.mtn_club_id = None
+    if rider.cx_club_id not in valid_club_ids:
+        rider.cx_club_id = None
+    if rider.road_team_id not in valid_team_ids:
+        rider.road_team_id = None
+    if rider.track_team_id not in valid_team_ids:
+        rider.track_team_id = None
+    if rider.mtn_team_id not in valid_team_ids:
+        rider.mtn_team_id = None
+    if rider.cx_team_id not in valid_team_ids:
+        rider.cx_team_id = None
+    if rider.coll_club_id not in valid_club_ids:
+        rider.coll_club_id = None
+    return rider
 
 # Load rider data
 rider_data = load_csv(args.riderfile, RIDER_TRANSFORMS)
 
 # Loop through, clean up data, convert to mapped object
 for i in range(len(rider_data)):
-    session.add(Rider(clean_rider_data(rider_data[i])))
+    session.add(clean_rider_ids(Rider(**rider_data[i])))
     # Commit every 1k objects
     if i % 1000 == 0:
         session.commit()
