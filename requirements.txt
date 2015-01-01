@@ -1,0 +1,10 @@
+Pygments==2.0.1
+SQLAlchemy==0.9.8
+bpython==0.13.1
+hiredis==0.1.5
+jellyfish==0.2.1
+python-dateutil==2.3
+redis==2.10.3
+requests==2.5.1
+six==1.8.0
+us==0.9.0
