@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 
 import argparse
 
-parser = argparse.ArgumentParser(description='Load the USAC CSV files into an SQL database.')
+parser = argparse.ArgumentParser(description='Open the USAC database SQL ORM in a Python shell')
 parser.add_argument('uri', type=str, help='an SQL database URI')
 args = parser.parse_args()
 
