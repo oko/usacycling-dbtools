@@ -2,3 +2,4 @@
 *.tmp
 *.pyo
 *.pyc
+wp*.csv
