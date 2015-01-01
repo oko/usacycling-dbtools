@@ -58,7 +58,7 @@ def parse_optional_int(val):
     :param val: input string
     :return: an ``int`` or ``None``
     """
-    return min(int(val), 2147483647) if val.strip() else None
+    return min(int(val), 2147483647) if val is not None and val != 'None' and val.strip() else None
 
 
 def parse_category(val):
@@ -174,8 +174,8 @@ def parse_ncca_division(val):
 RIDER_TRANSFORMS = (
     ("suspension", parse_suspension),  # Suspension Status
     ("license", parse_required_int),  # License Number
-    ("first_name", parse_name),  # First Name
-    ("last_name", parse_name),  # Last Name
+    ("last_name", parse_name),  # First Name
+    ("first_name", parse_name),  # Last Name
     ("city", parse_name),  # City
     ("state", parse_state),  # State
     ("zipcode", parse_zip),  # Zip Code
