@@ -5,9 +5,17 @@ from sqlalchemy.orm import sessionmaker
 
 from datetime import datetime
 
-print("Launching USAC database load @ %s" % datetime.now())
+import argparse
 
-engine = create_engine("postgresql+psycopg2://localhost:5432/usac")
+parser = argparse.ArgumentParser(description='Load the USAC CSV files into an SQL database.')
+parser.add_argument('uri', type=str, help='an SQL database URI')
+parser.add_argument('riderfile', type=str, help='the USAC universal format rider CSV file (wp_p_universal.csv)')
+parser.add_argument('clubsfile', type=str, help='the USAC one-line-per-team format clubs CSV file (wp_all_clubs2.csv)')
+args = parser.parse_args()
+
+print("Launching USAC database load @ %s..." % datetime.now())
+
+engine = create_engine(args.uri)
 Session = sessionmaker(bind=engine)
 session = Session()
 
@@ -16,7 +24,7 @@ from libusac3.sql import Base, Rider, Club, Team
 Base.metadata.drop_all(bind=engine)
 Base.metadata.create_all(bind=engine)
 
-club_data = load_csv("wp_all_clubs2.csv", CLUB_TEAM_TRANSFORMS)
+club_data = load_csv(args.clubsfile, CLUB_TEAM_TRANSFORMS)
 
 clubs_duped = map(Club, club_data)
 clubs_id_set = set()
@@ -38,7 +46,8 @@ valid_club_ids = tuple(map(lambda x: x.club_id, session.query(Club).all()))
 valid_team_ids = tuple(map(lambda x: x.team_id, session.query(Team).all()))
 
 # Define rider data scrub function using
-# newly instantiated club IDs
+# newly instantiated club/team IDs to check
+# for existence
 def clean_rider_data(data):
     if data[29] not in valid_club_ids:
         data[29] = None
@@ -60,14 +69,16 @@ def clean_rider_data(data):
         data[36] = None
     return data
 
+# Load rider data
+rider_data = load_csv(args.riderfile, RIDER_TRANSFORMS)
 
-rider_data = load_csv("wp_p_universal.csv", RIDER_TRANSFORMS)
-
+# Loop through, clean up data, convert to mapped object
 for i in range(len(rider_data)):
     session.add(Rider(clean_rider_data(rider_data[i])))
+    # Commit every 1k objects
     if i % 1000 == 0:
         session.commit()
+# Commit any remaining objects
+session.commit()
 
 print("...completed @ %s" % datetime.now())
-
-session.commit()

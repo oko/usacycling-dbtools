@@ -1,7 +1,13 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-engine = create_engine("postgresql+psycopg2://localhost:5432/usac")
+import argparse
+
+parser = argparse.ArgumentParser(description='Load the USAC CSV files into an SQL database.')
+parser.add_argument('uri', type=str, help='an SQL database URI')
+args = parser.parse_args()
+
+engine = create_engine(args.uri)
 Session = sessionmaker(bind=engine)
 session = Session()
 

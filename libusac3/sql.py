@@ -1,7 +1,6 @@
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, String, Integer, Date, Float, ForeignKey
 from sqlalchemy.orm import relationship
-Base = declarative_base()
+from .sql_base import Base
 
 
 class Club(Base):
@@ -34,6 +33,9 @@ class Club(Base):
         self.division = data[11]
         self.ncca_conf = data[12]
 
+    def __repr__(self):
+        return "<Club #%d: %s>" % (self.club_id, self.name)
+
 
 class Team(Base):
     __tablename__ = "usac_team"
@@ -48,6 +50,9 @@ class Team(Base):
         self.team_id = data[2]
         self.name = data[3]
         self.club_id = data[0]
+
+    def __repr__(self):
+        return "<Team #%d: %s (club #%d)>" % (self.team_id, self.name, self.club_id)
 
 
 class Rider(Base):
@@ -71,7 +76,6 @@ class Rider(Base):
     expire_date = Column(Date)
 
     intl_team = Column(String(255))
-    coll_club = Column(String(255))
 
     road_cat = Column(Integer)
     track_cat = Column(Integer)
