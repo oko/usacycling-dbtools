@@ -1,0 +1,5 @@
+SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://localhost/usac"
+USACDB_REDIS_HOST = "localhost"
+USACDB_REDIS_PORT = 6379
+USACDB_ENABLE_REDIS = True
+USACDB_ENABLE_SQL = True

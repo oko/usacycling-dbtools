@@ -9,6 +9,7 @@ class Club(Base):
     club_id = Column(Integer, primary_key=True)
     club_name = Column(String(255))
 
+    # Contact Information
     contact_name = Column(String(255))
     address_1 = Column(String(255))
     address_2 = Column(String(255))
@@ -16,10 +17,17 @@ class Club(Base):
     state = Column(String(2))
     zipcode = Column(Integer)
     phone_number = Column(String(32))
+
+    # NCCA (Collegiate) Division and Conference
     division = Column(Integer)
     ncca_conf = Column(String(5))
 
     def __init__(self, **kwargs):
+        """
+        Initialize a new club object
+
+        :param kwargs: keyword arguments containing attributes of the club
+        """
         self.club_id = kwargs["club_id"]
         self.club_name = kwargs["club_name"]
 
@@ -30,6 +38,7 @@ class Club(Base):
         self.state = kwargs["state"]
         self.zipcode = kwargs["zipcode"]
         self.phone_number = kwargs["phone_number"]
+
         self.division = kwargs["division"]
         self.ncca_conf = kwargs["ncca_conf"]
 
@@ -43,10 +52,16 @@ class Team(Base):
     team_id = Column(Integer, primary_key=True)
     team_name = Column(String(255))
 
+    # Parent club
     club_id = Column(Integer, ForeignKey(Club.__tablename__+".club_id"))
     club = relationship("Club", backref="teams")
 
     def __init__(self, **kwargs):
+        """
+        Initialize a new team object
+
+        :param kwargs: keyword arguments containing attributes of the team
+        """
         self.team_id = kwargs["team_id"]
         self.team_name = kwargs["team_name"]
         self.club_id = kwargs["club_id"]
@@ -87,7 +102,8 @@ class Rider(Base):
 
     birth_date = Column(Date)
     citizenship = Column(String(1))
-    
+
+    # Club/Team associations
     road_club_id = Column(Integer, ForeignKey(Club.__tablename__ + ".club_id"))
     road_club = relationship("Club", foreign_keys=[road_club_id], backref="club_road_members")
     road_team_id = Column(Integer, ForeignKey(Team.__tablename__ + ".team_id"))
@@ -105,16 +121,24 @@ class Rider(Base):
     cx_team_id = Column(Integer, ForeignKey(Team.__tablename__ + ".team_id"))
     cx_team = relationship("Team", foreign_keys=[cx_team_id], backref="team_cx_members")
 
+    # Collegiate club association
     coll_club_id = Column(Integer, ForeignKey(Club.__tablename__ + ".club_id"))
     coll_club = relationship("Club", foreign_keys=[coll_club_id], backref="club_coll_members")
-    
+
+    # UCI and ranking information
     uci_code = Column(String(32))
     cx_rank = Column(Float)
 
+    # HS club/team association
     hs_club_id = Column(Integer)
     hs_team_id = Column(Integer)
 
     def __init__(self, **kwargs):
+        """
+        Initialize a new rider object
+
+        :param kwargs: keyword arguments containing attributes of the rider
+        """
         self.suspension = kwargs["suspension"]  # Suspension Status
         self.license = kwargs["license"]        # License Number
         self.first_name = kwargs["first_name"]     # First Name
@@ -152,3 +176,5 @@ class Rider(Base):
     def __repr__(self):
         return "<Rider #%d '%s %s'>" % (self.license, self.first_name, self.last_name)
 
+    def __str__(self):
+        return "%s %s" % (self.first_name, self.last_name)

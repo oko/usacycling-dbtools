@@ -225,9 +225,6 @@ CLUB_TEAM_TRANSFORMS = (
 )
 
 
-from collections import OrderedDict
-
-
 def process_row(transforms, row):
     """
     Apply parser transformations to a single row.
@@ -238,7 +235,7 @@ def process_row(transforms, row):
     """
     row_dict = {}
     for i in range(len(transforms)):
-        if transforms[i][0] is not None:
+        if transforms[i][0] is not None:    # skip None/no-op transforms
             row_dict[transforms[i][0]] = transforms[i][1](row[i])
     return row_dict
 
